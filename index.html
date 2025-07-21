@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Математические приложения</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #444;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .app-container {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .task-description {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 5px;
+        }
+    </style>
+    <!-- Подключаем все компоненты -->
+    <script src="math-sum.js"></script>
+    <script src="digit-finder.js"></script>
+    <script src="string-checker.js"></script>
+    <script src="day-converter.js"></script>
+    <script src="unique-letters.js"></script>
+    <script src="quadratic-solver.js"></script>
+    <script src="line-end-counter.js"></script>
+    <script src="matrix-determinant.js"></script>
+    <script src="divisors-finder.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Математические приложения</h1>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th width="5%">№</th>
+                    <th width="25%">Задание</th>
+                    <th width="70%">Приложение</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>
+                        <div class="task-description">Вычисление суммы по формуле</div>
+                    </td>
+                    <td>
+                        <div class="app-container">
+                            <math-sum-calculator></math-sum-calculator>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>
+                        <div class="task-description">Определение k-й справа цифры в числе n</div>
+                    </td>
+                    <td>
+                        <div class="app-container">
+                            <digit-finder></digit-finder>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>
+                        <div class="task-description">Проверка совпадения первой и последней буквы в строке</div>
+                    </td>
+                    <td>
+                        <div class="app-container">
+                            <string-checker></string-checker>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>
+                        <div class="task-description">Определение порядкового номера дня в году</div>
+                    </td>
+                    <td>
+                        <div class="app-container">
+                            <day-converter></day-converter>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>
+                        <div class="task-description">Вывод уникальных букв текста в алфавитном порядке</div>
+                    </td>
+                    <td>
+                        <div class="app-container">
+                            <unique-letters></unique-letters>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>
+                        <div class="task-description">Решение квадратного уравнения (действительные и комплексные корни)</div>
+                    </td>
+                    <td>
+                        <div class="app-container">
+                            <quadratic-solver></quadratic-solver>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>
+                        <div class="task-description">Подсчёт строк в текстовом файле, оканчивающихся на заданную букву</div>
+                    </td>
+                    <td>
+                        <div class="app-container">
+                            <line-end-counter></line-end-counter>
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>8</td>
+                    <td>
+                        <div class="task-description">Вычисление определителя матрицы</div>
+                    </td>
+                    <td>
+                        <div class="app-container">
+                            <matrix-determinant></matrix-determinant>
+                        </div>
+                    </td>
+                </tr>
+
+
+
+                <tr>
+                    <td>9</td>
+                    <td>
+                        <div class="task-description">Нахождение делителей числа</div>
+                    </td>
+                    <td>
+                        <div class="app-container">
+                            <divisors-finder></divisors-finder>
+
+                        </div>
+                    </td>
+                </tr>
+
+
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
