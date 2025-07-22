@@ -1,4 +1,4 @@
-class SentenceBuilder extends HTMLElement {
+class CommonWordsFinder extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -13,6 +13,7 @@ class SentenceBuilder extends HTMLElement {
           --text-color: #2d3436;
           --light-bg: #f5f6fa;
           --success-color: #00b894;
+          --error-color: #d63031;
         }
         
         .container {
@@ -42,7 +43,7 @@ class SentenceBuilder extends HTMLElement {
           color: var(--text-color);
         }
         
-        textarea, input {
+        textarea {
           width: 100%;
           padding: 12px;
           border: 1px solid var(--border-color);
@@ -51,10 +52,10 @@ class SentenceBuilder extends HTMLElement {
           transition: all 0.3s ease;
           box-sizing: border-box;
           resize: vertical;
-          min-height: 60px;
+          min-height: 80px;
         }
         
-        textarea:focus, input:focus {
+        textarea:focus {
           outline: none;
           border-color: var(--primary-color);
           box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
@@ -98,14 +99,28 @@ class SentenceBuilder extends HTMLElement {
           border-left-color: var(--success-color);
         }
         
+        .error {
+          border-left-color: var(--error-color);
+        }
+        
         .result-title {
           font-weight: 600;
           margin-bottom: 12px;
-          color: var(--primary-color);
         }
         
         .success .result-title {
           color: var(--success-color);
+        }
+        
+        .error .result-title {
+          color: var(--error-color);
+        }
+        
+        .common-word {
+          background-color: #ffeaa7;
+          padding: 2px 6px;
+          border-radius: 4px;
+          margin-right: 6px;
         }
         
         @keyframes fadeIn {
@@ -114,76 +129,110 @@ class SentenceBuilder extends HTMLElement {
         }
         
         .error-message {
-          color: #d63031;
+          color: var(--error-color);
           font-size: 14px;
           margin-top: 5px;
           display: none;
         }
       </style>
       <div class="container">
-        <h2>Составитель предложений</h2>
+        <h2>Поиск самых длинных общих слов</h2>
         <div class="input-group">
-          <label for="part1">Первая часть предложения:</label>
-          <textarea id="part1" placeholder="Введите начало предложения"></textarea>
+          <label for="sentence1">Первое предложение:</label>
+          <textarea id="sentence1" placeholder="Введите первое предложение"></textarea>
           <div class="error-message" id="error1">Поле не может быть пустым</div>
         </div>
         
         <div class="input-group">
-          <label for="part2">Вторая часть предложения:</label>
-          <textarea id="part2" placeholder="Введите продолжение предложения"></textarea>
+          <label for="sentence2">Второе предложение:</label>
+          <textarea id="sentence2" placeholder="Введите второе предложение"></textarea>
           <div class="error-message" id="error2">Поле не может быть пустым</div>
         </div>
         
-        <button id="buildBtn">Составить предложение</button>
+        <button id="findBtn">Найти общие слова</button>
         
         <div class="result" id="output">
           <div class="result-title">Результат</div>
-          <div id="resultText">Здесь появится составленное предложение</div>
+          <div id="resultText">Здесь будут показаны самые длинные общие слова</div>
         </div>
       </div>
     `;
   }
 
   connectedCallback() {
-    this.shadowRoot.querySelector('#buildBtn')
-      .addEventListener('click', () => this.buildSentence());
+    this.shadowRoot.querySelector('#findBtn')
+      .addEventListener('click', () => this.findCommonWords());
   }
 
-  buildSentence() {
-    const part1 = this.shadowRoot.querySelector('#part1').value.trim();
-    const part2 = this.shadowRoot.querySelector('#part2').value.trim();
+  getWords(sentence) {
+    // Удаляем знаки препинания и приводим к нижнему регистру
+    return sentence.toLowerCase()
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
+      .split(/\s+/)
+      .filter(word => word.length > 0);
+  }
+
+  findCommonWords() {
+    const sentence1 = this.shadowRoot.querySelector('#sentence1').value.trim();
+    const sentence2 = this.shadowRoot.querySelector('#sentence2').value.trim();
     const output = this.shadowRoot.querySelector('#output');
     const resultText = this.shadowRoot.querySelector('#resultText');
     const error1 = this.shadowRoot.querySelector('#error1');
     const error2 = this.shadowRoot.querySelector('#error2');
 
-    // Сброс стилей ошибок
+    // Сброс стилей
     error1.style.display = 'none';
     error2.style.display = 'none';
-    output.classList.remove('success');
+    output.classList.remove('success', 'error');
 
     // Валидация
     let isValid = true;
-    if (!part1) {
+    if (!sentence1) {
       error1.style.display = 'block';
       isValid = false;
     }
-    if (!part2) {
+    if (!sentence2) {
       error2.style.display = 'block';
       isValid = false;
     }
 
     if (!isValid) {
-      resultText.textContent = 'Исправьте ошибки в полях ввода';
+      resultText.textContent = 'Пожалуйста, заполните оба поля';
+      output.classList.add('error');
       return;
     }
 
-    // Составление предложения
-    const sentence = `${part1} ${part2}`;
-    resultText.textContent = sentence;
+    // Получаем слова из предложений
+    const words1 = this.getWords(sentence1);
+    const words2 = this.getWords(sentence2);
+
+    // Находим общие слова
+    const commonWords = [...new Set(words1.filter(word => words2.includes(word)))];
+    
+    if (commonWords.length === 0) {
+      resultText.textContent = 'Нет общих слов в предложениях';
+      output.classList.add('error');
+      return;
+    }
+
+    // Находим максимальную длину
+    const maxLength = Math.max(...commonWords.map(word => word.length));
+    
+    // Фильтруем самые длинные слова
+    const longestWords = commonWords.filter(word => word.length === maxLength);
+    
+    // Форматируем вывод
+    if (longestWords.length === 1) {
+      resultText.innerHTML = `Самое длинное общее слово: <span class="common-word">${longestWords[0]}</span>`;
+    } else {
+      resultText.innerHTML = `Самые длинные общие слова: ${longestWords.map(word => 
+        `<span class="common-word">${word}</span>`
+      ).join('')}`;
+    }
+    
     output.classList.add('success');
-    this.shadowRoot.querySelector('.result-title').textContent = 'Готовое предложение';
+    this.shadowRoot.querySelector('.result-title').textContent = 'Результат поиска';
   }
 }
 
-customElements.define('sentence-builder', SentenceBuilder);
+customElements.define('common-words-finder', CommonWordsFinder);
